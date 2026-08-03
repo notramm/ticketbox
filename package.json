@@ -13,7 +13,12 @@
     "seed": "knex seed:run",
     "db:setup": "knex migrate:latest && knex seed:run"
   },
-  "keywords": ["ticketbox", "express", "knex", "razorpay"],
+  "keywords": [
+    "ticketbox",
+    "express",
+    "knex",
+    "razorpay"
+  ],
   "author": "Ram",
   "license": "ISC",
   "type": "commonjs",
@@ -22,6 +27,7 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "joi": "^18.2.3",
+    "jsonwebtoken": "^9.0.3",
     "knex": "^3.3.0",
     "pg": "^8.22.0",
     "pino": "^10.3.1",

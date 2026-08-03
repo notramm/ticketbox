@@ -25,3 +25,18 @@ npm run seed
 npm run start:api
 npm run start:web
 ```
+
+## Day 2
+
+```bash
+npm install jsonwebtoken
+npm run start:api
+
+# Smoke tests (PowerShell)
+Invoke-RestMethod http://localhost:4000/health
+$login = Invoke-RestMethod -Method Post -Uri http://localhost:4000/auth/login -ContentType 'application/json' -Body '{"email":"admin@ticketbox.local","password":"Admin@12345"}'
+$login.token
+Invoke-RestMethod -Uri http://localhost:4000/auth/me -Headers @{ Authorization = "Bearer $($login.token)" }
+# Expect 401 without token:
+try { Invoke-WebRequest -Uri http://localhost:4000/admin/events } catch { $_.Exception.Response.StatusCode }
+```
