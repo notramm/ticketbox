@@ -1,0 +1,82 @@
+<article class="event-detail">
+  <a class="event-detail__back" href="/">← All events</a>
+
+  <header class="event-detail__header">
+    <h1 class="event-detail__title"><%= event.title %></h1>
+    <p class="event-detail__meta">
+      <time datetime="<%= new Date(event.starts_at).toISOString() %>">
+        <%= formatDate(event.starts_at) %>
+      </time>
+    </p>
+  </header>
+
+  <% if (event.banner_key && s3PublicBaseUrl) { %>
+    <figure class="event-detail__banner">
+      <!-- Sahil: set S3_PUBLIC_BASE_URL when banners are live -->
+      <img
+        class="event-detail__banner-img"
+        src="<%= s3PublicBaseUrl %>/<%= event.banner_key %>"
+        alt=""
+      >
+    </figure>
+  <% } %>
+
+  <div class="event-detail__body">
+    <p class="event-detail__description"><%= event.description || 'No description yet.' %></p>
+
+    <dl class="event-detail__facts">
+      <div class="event-detail__fact">
+        <dt>Price</dt>
+        <dd><%= formatPrice(event.price_paise) %></dd>
+      </div>
+      <div class="event-detail__fact">
+        <dt>Seats left</dt>
+        <dd><%= seatsLeft(event) %> / <%= event.total_seats %></dd>
+      </div>
+    </dl>
+  </div>
+
+  <section class="booking-form" aria-labelledby="booking-heading">
+    <h2 class="booking-form__title" id="booking-heading">Book tickets</h2>
+
+    <% if (seatsLeft(event) <= 0) { %>
+      <p class="booking-form__soldout">Sold out</p>
+    <% } else { %>
+      <!-- Day 4: this form posts to the API checkout flow -->
+      <form class="booking-form__form" method="get" action="/checkout">
+        <input type="hidden" name="event_id" value="<%= event.id %>">
+        <input type="hidden" name="slug" value="<%= event.slug %>">
+
+        <label class="field">
+          <span class="field__label">Name</span>
+          <input class="field__input" type="text" name="customer_name" required autocomplete="name">
+        </label>
+
+        <label class="field">
+          <span class="field__label">Email</span>
+          <input class="field__input" type="email" name="email" required autocomplete="email">
+        </label>
+
+        <label class="field">
+          <span class="field__label">Phone</span>
+          <input class="field__input" type="tel" name="phone" required autocomplete="tel">
+        </label>
+
+        <label class="field">
+          <span class="field__label">Quantity</span>
+          <input
+            class="field__input"
+            type="number"
+            name="qty"
+            min="1"
+            max="<%= seatsLeft(event) %>"
+            value="1"
+            required
+          >
+        </label>
+
+        <button class="btn btn--primary" type="submit">Continue to checkout</button>
+      </form>
+    <% } %>
+  </section>
+</article>
