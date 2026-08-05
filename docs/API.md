@@ -148,6 +148,70 @@ Sets `status = draft`.
 
 ---
 
+## Booking + Payment (Day 4)
+
+### `POST /checkout`
+
+Creates booking (`status=created`), reserves seats with `SELECT … FOR UPDATE`, creates Razorpay order.
+
+Request:
+```json
+{
+  "event_id": 1,
+  "customer_name": "Ada Lovelace",
+  "email": "ada@example.com",
+  "phone": "9999999999",
+  "qty": 1
+}
+```
+
+Response `201`:
+```json
+{
+  "order_id": "order_xxx",
+  "booking_id": 12,
+  "key_id": "rzp_test_xxx",
+  "amount_paise": 49900,
+  "currency": "INR"
+}
+```
+
+Errors: `400` sold out / validation · `404` event · `503` Razorpay keys missing
+
+---
+
+### `POST /payment/verify`
+
+Browser callback HMAC verify. **Optimistic UI only** — Day 5 webhook is source of truth.
+
+Request:
+```json
+{
+  "order_id": "order_xxx",
+  "payment_id": "pay_xxx",
+  "signature": "<hmac>"
+}
+```
+
+Response `200`:
+```json
+{ "ticket_code": "TB-A1B2C3D4", "booking_id": 12 }
+```
+
+---
+
+### `GET /bookings/:ticket_code`
+
+Public confirmation lookup. Returns booking + event fields.
+
+---
+
+### `GET /admin/bookings`
+
+Auth required. Query: `page`, `limit`, `status`, `q` (search name/email/ticket_code).
+
+---
+
 ## Health
 
 ### `GET /health`
@@ -166,19 +230,15 @@ Sets `status = draft`.
 
 ---
 
-## Not in Day 2 (coming later)
+## Coming later
 
 | Endpoint | Day |
 |---|---|
-| `POST /checkout` | 4 |
-| `POST /payment/verify` | 4 |
 | `POST /webhooks/razorpay` | 5 |
-| `GET /bookings/:ticket_code` | 4–5 |
-| `GET /admin/bookings` | 4–5 |
 | `GET /admin/dashboard` | 5 |
 | `GET /admin/webhooks` | 5 |
 | `GET /admin/upload-url` | 5 |
 
 ---
 
-*Shared with Sahil on Day 2. Freeze until both agree to change.*
+*Day 2 contract frozen for Sahil. Day 4 payment endpoints added above — tell Sahil if admin bookings shape changes.*

@@ -51,3 +51,23 @@ npm run start:web
 # http://localhost:3000          → published events from DB
 # http://localhost:3000/events/intro-to-nodejs
 ```
+
+## Day 4
+
+```bash
+npm install razorpay cors
+
+# Put Razorpay TEST keys in .env (never live keys), then restart API.
+# If password has @, URL-encode it in DATABASE_URL (e.g. @ -> %40).
+# API_PUBLIC_URL=http://localhost:4000
+# WEB_ORIGIN=http://localhost:3000
+
+npm run start:api
+npm run start:web
+# or: npm run dev:api / npm run dev:web (watches .env too)
+
+
+# Browser flow:
+# Event page → Continue to checkout → Pay with Razorpay
+# Test card: 4111 1111 1111 1111, any future expiry, any CVV
+```

@@ -1,8 +1,64 @@
 <section class="checkout">
-  <h1 class="checkout__title">Checkout</h1>
-  <p class="checkout__lede">
-    Payment checkout lands on Day 4 (Razorpay). Your details were received for
-    <strong><%= slug || 'this event' %></strong>.
-  </p>
-  <p><a href="<%= slug ? '/events/' + slug : '/' %>">Back to event</a></p>
+  <header class="checkout__intro">
+    <h1 class="checkout__title">Checkout</h1>
+    <p class="checkout__lede">Confirm your details and pay securely (Razorpay test mode).</p>
+  </header>
+
+  <div class="checkout__summary">
+    <h2 class="checkout__event"><%= event.title %></h2>
+    <p class="checkout__meta">
+      <time datetime="<%= new Date(event.starts_at).toISOString() %>">
+        <%= formatDate(event.starts_at) %>
+      </time>
+    </p>
+    <dl class="checkout__facts">
+      <div>
+        <dt>Quantity</dt>
+        <dd><%= qty %></dd>
+      </div>
+      <div>
+        <dt>Total</dt>
+        <dd><%= formatPrice(amount_paise) %></dd>
+      </div>
+    </dl>
+  </div>
+
+  <form id="checkout-form" class="checkout__form" novalidate>
+    <input type="hidden" name="event_id" value="<%= event.id %>">
+    <input type="hidden" name="qty" value="<%= qty %>">
+
+    <label class="field">
+      <span class="field__label">Name</span>
+      <input class="field__input" type="text" name="customer_name" value="<%= customer_name %>" required autocomplete="name">
+    </label>
+
+    <label class="field">
+      <span class="field__label">Email</span>
+      <input class="field__input" type="email" name="email" value="<%= email %>" required autocomplete="email">
+    </label>
+
+    <label class="field">
+      <span class="field__label">Phone</span>
+      <input class="field__input" type="tel" name="phone" value="<%= phone %>" required autocomplete="tel">
+    </label>
+
+    <p id="checkout-error" class="checkout__error" hidden></p>
+
+    <button id="pay-button" class="btn btn--primary" type="submit">Pay with Razorpay</button>
+  </form>
+
+  <p class="checkout__back"><a href="/events/<%= event.slug %>">← Back to event</a></p>
 </section>
+
+<script>
+  window.TICKETBOX_CHECKOUT = {
+    apiBaseUrl: <%- JSON.stringify(apiBaseUrl) %>,
+    eventTitle: <%- JSON.stringify(event.title) %>,
+    amountPaise: <%= amount_paise %>,
+    prefill: {
+      name: <%- JSON.stringify(customer_name) %>,
+      email: <%- JSON.stringify(email) %>,
+      contact: <%- JSON.stringify(phone) %>
+    }
+  };
+</script>

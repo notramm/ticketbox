@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('./src/config/env');
 
 /**
  * Knex config — DATABASE_URL is the single source of truth.
