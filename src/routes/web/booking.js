@@ -10,6 +10,8 @@ router.get('/bookings/lookup', (req, res) => {
     bodyClass: 'page--booking-lookup',
     message: null,
     booking: null,
+    ticket_code: '',
+    email: '',
   });
 });
 
@@ -25,6 +27,8 @@ router.post(
         bodyClass: 'page--booking-lookup',
         message: 'Ticket code and email are required.',
         booking: null,
+        ticket_code: ticketCode,
+        email,
       });
     }
 
@@ -51,6 +55,8 @@ router.post(
         bodyClass: 'page--booking-lookup',
         message: 'No booking found for that ticket code and email.',
         booking: null,
+        ticket_code: ticketCode,
+        email,
       });
     }
 
@@ -59,6 +65,8 @@ router.post(
       bodyClass: 'page--booking-lookup',
       message: null,
       booking,
+      ticket_code: ticketCode,
+      email,
     });
   })
 );

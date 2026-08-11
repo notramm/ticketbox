@@ -6,12 +6,14 @@ const expressLayouts = require('express-ejs-layouts');
 const logger = require('./config/logger');
 const db = require('./config/db');
 const { formatPrice, formatDate, seatsLeft } = require('./utils/format');
+const { bannerUrl } = require('./utils/bannerUrl');
 const { errorHandler } = require('./middleware/errorHandler');
 
 const homeRoutes = require('./routes/web/home');
 const eventRoutes = require('./routes/web/event');
 const bookingRoutes = require('./routes/web/booking');
 const checkoutRoutes = require('./routes/web/checkout');
+const mediaRoutes = require('./routes/web/media');
 
 const app = express();
 const port = Number(process.env.WEB_PORT) || 3000;
@@ -24,10 +26,13 @@ app.use(expressLayouts);
 app.locals.formatPrice = formatPrice;
 app.locals.formatDate = formatDate;
 app.locals.seatsLeft = seatsLeft;
+app.locals.bannerUrl = bannerUrl;
+// Kept for older templates; prefer bannerUrl() which proxies private buckets
 app.locals.s3PublicBaseUrl = process.env.S3_PUBLIC_BASE_URL || '';
 
 app.use(express.static(path.join(__dirname, '..', 'public')));
 app.use(express.urlencoded({ extended: false }));
+app.use(mediaRoutes);
 
 app.get('/health', async (_req, res) => {
   try {

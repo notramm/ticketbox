@@ -1,34 +1,91 @@
 <section class="booking-lookup">
   <header class="booking-lookup__intro">
-    <h1 class="booking-lookup__title">Find my booking</h1>
-    <p class="booking-lookup__lede">Enter your ticket code and email.</p>
+    <h1 class="booking-lookup__title">Find Your Booking</h1>
+    <p class="booking-lookup__lede">Enter your ticket code and email to retrieve your booking.</p>
   </header>
 
   <form class="booking-lookup__form" method="post" action="/bookings/lookup">
     <label class="field">
-      <span class="field__label">Ticket code</span>
-      <input class="field__input" type="text" name="ticket_code" required autocomplete="off" placeholder="TB-XXXXXXXX">
+      <span class="field__label">Ticket Code</span>
+      <div class="input-glow field__input-wrap">
+        <span class="material-symbols-outlined field__icon">confirmation_number</span>
+        <input
+          class="field__input field__input--mono field__input--icon"
+          type="text"
+          name="ticket_code"
+          required
+          autocomplete="off"
+          placeholder="e.g. TX-9482-XYZ"
+          value="<%= typeof ticket_code !== 'undefined' && ticket_code ? ticket_code : '' %>"
+        >
+      </div>
     </label>
 
     <label class="field">
-      <span class="field__label">Email</span>
-      <input class="field__input" type="email" name="email" required autocomplete="email">
+      <span class="field__label">Email Address</span>
+      <div class="input-glow field__input-wrap">
+        <span class="material-symbols-outlined field__icon">mail</span>
+        <input
+          class="field__input field__input--icon"
+          type="email"
+          name="email"
+          required
+          autocomplete="email"
+          placeholder="you@example.com"
+          value="<%= typeof email !== 'undefined' && email ? email : '' %>"
+        >
+      </div>
     </label>
 
-    <button class="btn btn--primary" type="submit">Look up</button>
+    <button class="btn btn-primary btn-wide" type="submit">
+      <span class="material-symbols-outlined" style="font-size:20px;">search</span>
+      Search Booking
+    </button>
   </form>
 
   <% if (message) { %>
-    <p class="booking-lookup__message"><%= message %></p>
+    <p class="booking-lookup__message" role="alert"><%= message %></p>
   <% } %>
 
   <% if (booking) { %>
-    <div class="booking-lookup__result">
-      <p class="confirmation__code"><%= booking.ticket_code %></p>
-      <h2><%= booking.title %></h2>
-      <p><%= formatDate(booking.starts_at) %></p>
-      <p><%= booking.qty %> ticket(s) · <%= formatPrice(booking.amount_paise) %> · <%= booking.status %></p>
-      <p><a href="/bookings/<%= booking.ticket_code %>">Open confirmation page</a></p>
+    <div class="booking-lookup__result ticket-card">
+      <div class="ticket-card__body">
+        <p class="ticket-code__label">Ticket Code</p>
+        <p class="ticket-code__value"><%= booking.ticket_code %></p>
+        <h2 class="ticket-card__event-title" style="margin-top:1rem;"><%= booking.title %></h2>
+        <p class="font-body-sm" style="color:var(--c-text-muted);margin-bottom:1rem;">
+          <%= formatDate(booking.starts_at) %>
+        </p>
+        <div class="ticket-card__meta-grid">
+          <div>
+            <p class="ticket-meta__label">Quantity</p>
+            <p class="ticket-meta__value"><%= booking.qty %></p>
+          </div>
+          <div>
+            <p class="ticket-meta__label">Amount</p>
+            <p class="ticket-meta__value ticket-meta__value--amount"><%= formatPrice(booking.amount_paise) %></p>
+          </div>
+          <div>
+            <p class="ticket-meta__label">Status</p>
+            <p class="ticket-meta__value">
+              <span class="badge badge-<%= booking.status === 'paid' ? 'paid' : (booking.status === 'failed' ? 'failed' : 'created') %>">
+                <%= String(booking.status || '').toUpperCase() %>
+              </span>
+            </p>
+          </div>
+        </div>
+        <p style="margin-top:1.25rem;">
+          <a class="btn btn-primary" href="/bookings/<%= booking.ticket_code %>">Open confirmation page</a>
+        </p>
+      </div>
+    </div>
+  <% } else if (!message) { %>
+    <div class="booking-lookup__empty">
+      <div class="booking-lookup__empty-icon">
+        <span class="material-symbols-outlined" style="font-size:32px;">receipt_long</span>
+      </div>
+      <p class="home__empty-title">No booking found yet</p>
+      <p class="home__empty-text">Enter your details above to view your event ticket and status.</p>
     </div>
   <% } %>
 </section>

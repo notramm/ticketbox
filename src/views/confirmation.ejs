@@ -1,43 +1,63 @@
 <section class="confirmation">
-  <header class="confirmation__intro">
-    <h1 class="confirmation__title">Booking confirmed</h1>
-    <p class="confirmation__lede">Your ticket is ready. Keep this code safe.</p>
-  </header>
-
-  <div class="confirmation__ticket">
-    <p class="confirmation__code-label">Ticket code</p>
-    <p class="confirmation__code"><%= booking.ticket_code %></p>
-
-    <h2 class="confirmation__event"><%= booking.title %></h2>
-    <p class="confirmation__meta">
-      <time datetime="<%= new Date(booking.starts_at).toISOString() %>">
-        <%= formatDate(booking.starts_at) %>
-      </time>
-    </p>
-
-    <dl class="confirmation__facts">
-      <div>
-        <dt>Name</dt>
-        <dd><%= booking.customer_name %></dd>
-      </div>
-      <div>
-        <dt>Email</dt>
-        <dd><%= booking.email %></dd>
-      </div>
-      <div>
-        <dt>Quantity</dt>
-        <dd><%= booking.qty %></dd>
-      </div>
-      <div>
-        <dt>Paid</dt>
-        <dd><%= formatPrice(booking.amount_paise) %></dd>
-      </div>
-      <div>
-        <dt>Status</dt>
-        <dd><%= booking.status %></dd>
-      </div>
-    </dl>
+  <div class="confirmation__icon" aria-hidden="true">
+    <span class="material-symbols-outlined filled" style="font-size:32px;color:#fff;">check</span>
   </div>
+  <h1 class="confirmation__title">Booking Confirmed!</h1>
+  <p class="confirmation__sub">Your ticket is ready. Keep this code safe.</p>
 
-  <p><a href="/">Browse more events</a></p>
+  <article class="ticket-card">
+    <div class="ticket-card__banner">
+      <span class="tag-category ticket-card__banner-tag">Event Ticket</span>
+    </div>
+    <div class="ticket-card__body">
+      <h2 class="ticket-card__event-title"><%= booking.title %></h2>
+
+      <div class="ticket-card__meta-grid">
+        <div>
+          <p class="ticket-meta__label">Name</p>
+          <p class="ticket-meta__value"><%= booking.customer_name %></p>
+        </div>
+        <div>
+          <p class="ticket-meta__label">Email</p>
+          <p class="ticket-meta__value"><%= booking.email %></p>
+        </div>
+        <div>
+          <p class="ticket-meta__label">Quantity</p>
+          <p class="ticket-meta__value"><%= booking.qty %></p>
+        </div>
+        <div>
+          <p class="ticket-meta__label">Amount</p>
+          <p class="ticket-meta__value ticket-meta__value--amount"><%= formatPrice(booking.amount_paise) %></p>
+        </div>
+        <div>
+          <p class="ticket-meta__label">Date</p>
+          <p class="ticket-meta__value">
+            <time datetime="<%= new Date(booking.starts_at).toISOString() %>">
+              <%= formatDate(booking.starts_at) %>
+            </time>
+          </p>
+        </div>
+        <div>
+          <p class="ticket-meta__label">Status</p>
+          <p class="ticket-meta__value">
+            <span class="badge badge-<%= booking.status === 'paid' ? 'paid' : (booking.status === 'failed' ? 'failed' : 'created') %>">
+              <%= String(booking.status || '').toUpperCase() %>
+            </span>
+          </p>
+        </div>
+      </div>
+
+      <div class="ticket-code-section">
+        <div>
+          <p class="ticket-code__label">Ticket Code</p>
+          <p class="ticket-code__value"><%= booking.ticket_code %></p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <div class="confirmation__actions">
+    <a class="btn btn-primary" href="/bookings/lookup">Find Booking</a>
+    <a class="btn btn-ghost" href="/">Back to Home</a>
+  </div>
 </section>

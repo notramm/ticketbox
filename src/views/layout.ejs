@@ -1,22 +1,54 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
   <meta charset="utf-8">
+
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="description" content="TicketBox — browse events and book tickets online.">
+
   <title><%= typeof title !== 'undefined' ? title + ' · TicketBox' : 'TicketBox' %></title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Montserrat:wght@600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="/css/main.css">
+
 </head>
+
 <body class="page<%= typeof bodyClass !== 'undefined' ? ' ' + bodyClass : '' %>">
+
   <%- include('partials/header') %>
 
+
+
   <main class="site-main" id="main">
+
     <%- body %>
+
   </main>
+
+
 
   <%- include('partials/footer') %>
 
+
+
   <% if (typeof scripts !== 'undefined' && scripts) { %>
+
     <%- scripts %>
+
   <% } %>
+
 </body>
+
 </html>
+
