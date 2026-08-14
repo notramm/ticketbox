@@ -118,3 +118,21 @@ sudo ufw status
 ```
 
 Full checklist: `docs/DAY6_EC2.md`
+
+## Day 7 (Node + PM2 + nginx → EJS on :80)
+
+```bash
+# On EC2, in Backend/
+bash infra/scripts/day7-bootstrap.sh
+
+pm2 status
+curl -sI http://127.0.0.1/ | head
+# Browser: http://YOUR_EC2_PUBLIC_IP → EJS home
+
+# Survive reboot
+pm2 startup
+pm2 save
+```
+
+Full checklist: `docs/DAY7_EC2.md`  
+Sahil admin SPA on IP (optional/conflict): monorepo `deploy/day-7.md`
