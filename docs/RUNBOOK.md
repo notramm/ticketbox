@@ -74,6 +74,25 @@ If site works on IP but not domain: NS not delegated, or A record still on old d
 
 ---
 
+## Day 9 — HTTPS
+
+```bash
+export DOMAIN=yourdomain.com
+export CERTBOT_EMAIL=you@example.com
+bash infra/scripts/09-certbot-ssl.sh
+
+# Renewal
+sudo certbot renew --dry-run
+sudo systemctl list-timers | grep certbot
+
+# After .env https:// update
+pm2 restart all
+```
+
+Webhook URL must be `https://api.<domain>/webhooks/razorpay` (not cloudflared).
+
+---
+
 ## Later (stubs)
 
 - Restart app: `pm2 restart all`
