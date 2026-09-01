@@ -71,3 +71,27 @@ npm run start:web
 # Event page → Continue to checkout → Pay with Razorpay
 # Test card: 4111 1111 1111 1111, any future expiry, any CVV
 ```
+
+## Day 5
+
+```bash
+npm install @aws-sdk/client-s3 @aws-sdk/s3-request-presigner
+
+# 1) cloudflared tunnel (webhook reaches localhost)
+cloudflared tunnel --url http://localhost:4000
+# Copy https://xxxx.trycloudflare.com
+
+# 2) Razorpay Dashboard → Settings → Webhooks → Add
+# URL: https://xxxx.trycloudflare.com/webhooks/razorpay
+# Events: payment.captured, payment.failed
+# Copy webhook secret → RAZORPAY_WEBHOOK_SECRET in .env → restart API
+
+# 3) AWS (for upload-url only on Day 5)
+# - Create S3 bucket in ap-south-1 (e.g. ticketbox-banners)
+# - Block public access OFF for banners OR use CloudFront later
+# - IAM user with s3:PutObject on arn:aws:s3:::ticketbox-banners/banners/*
+# - Put AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY / S3_BUCKET_NAME in .env
+# - Optional: S3_PUBLIC_BASE_URL=https://ticketbox-banners.s3.ap-south-1.amazonaws.com
+
+# Demo proof: start payment, close browser tab mid-flow → booking still becomes paid via webhook
+```

@@ -212,6 +212,58 @@ Auth required. Query: `page`, `limit`, `status`, `q` (search name/email/ticket_c
 
 ---
 
+## Webhooks + Admin (Day 5)
+
+### `POST /webhooks/razorpay`
+
+Razorpay → our API. **Raw body** (`express.raw`) mounted **before** `express.json()`.
+
+- Header `X-Razorpay-Signature` verified with `RAZORPAY_WEBHOOK_SECRET`
+- Header `X-Razorpay-Event-Id` used for idempotency (`webhook_events.gateway_event_id` UNIQUE)
+- On `payment.captured`: set booking `paid`, issue `ticket_code` if missing  
+  (seats already reserved at `/checkout` — not incremented again)
+- Duplicate events → still `200` (stop Razorpay retries)
+
+---
+
+### `GET /admin/dashboard`
+
+Auth required.
+
+```json
+{
+  "total_revenue_paise": 49900,
+  "tickets_sold": 1,
+  "failed_payments": 0,
+  "event_count": 3,
+  "paid_bookings": 1
+}
+```
+
+---
+
+### `GET /admin/webhooks`
+
+Auth required. Paginated webhook log (`page`, `limit`).
+
+---
+
+### `GET /admin/upload-url?filename=banner.jpg`
+
+Auth required. Returns S3 presigned PUT URL (scoped to `banners/*`).
+
+```json
+{
+  "upload_url": "https://...",
+  "key": "banners/....jpg",
+  "public_url": "https://.../banners/....jpg",
+  "expires_in": 300,
+  "content_type": "image/jpeg"
+}
+```
+
+---
+
 ## Health
 
 ### `GET /health`
@@ -230,15 +282,4 @@ Auth required. Query: `page`, `limit`, `status`, `q` (search name/email/ticket_c
 
 ---
 
-## Coming later
-
-| Endpoint | Day |
-|---|---|
-| `POST /webhooks/razorpay` | 5 |
-| `GET /admin/dashboard` | 5 |
-| `GET /admin/webhooks` | 5 |
-| `GET /admin/upload-url` | 5 |
-
----
-
-*Day 2 contract frozen for Sahil. Day 4 payment endpoints added above — tell Sahil if admin bookings shape changes.*
+*Day 5 complete for Week 1 API surface. Week 2 = EC2 / nginx / domain / SSL.*
