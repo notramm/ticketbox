@@ -1,27 +1,68 @@
 <section class="home">
-  <header class="home__intro">
-    <h1 class="home__title">Upcoming events</h1>
-    <p class="home__lede">Pick a workshop or event and book your seat.</p>
-  </header>
+  <div class="home__hero">
+    <div class="home__hero-copy">
+      <p class="tag-category">Live Experiences</p>
+      <h1 class="home__title">Unforgettable Events, Just a Click Away</h1>
+      <p class="home__lede">Pick a workshop or event and book your seat in minutes.</p>
+      <a class="btn btn-primary" href="#upcoming">Explore Now</a>
+    </div>
+    <div class="home__hero-visual" aria-hidden="true">
+      <span class="home__trending">🔥 Trending</span>
+    </div>
+  </div>
+
+  <div class="home__section-head" id="upcoming">
+    <h2 class="home__section-title">Upcoming Experiences</h2>
+  </div>
 
   <% if (!events.length) { %>
-    <p class="home__empty">No published events right now. Check back soon.</p>
+    <div class="home__empty" role="status">
+      <p class="home__empty-title">No published events right now</p>
+      <p class="home__empty-text">Check back soon — new dates land here first.</p>
+    </div>
   <% } else { %>
     <ul class="event-list">
       <% events.forEach(function (event) { %>
+        <%
+          var left = seatsLeft(event);
+          var pct = event.total_seats > 0 ? (left / event.total_seats) * 100 : 0;
+          var seatsTone = 'seats-left--ok';
+          var seatsCountClass = 'high';
+          if (left <= 0 || pct <= 20) { seatsTone = 'seats-left--critical'; seatsCountClass = 'low'; }
+          else if (pct <= 50) { seatsTone = 'seats-left--warn'; seatsCountClass = 'mid'; }
+        %>
         <li class="event-list__item">
           <article class="event-card">
             <a class="event-card__link" href="/events/<%= event.slug %>">
-              <h2 class="event-card__title"><%= event.title %></h2>
-              <p class="event-card__meta">
-                <time datetime="<%= new Date(event.starts_at).toISOString() %>">
-                  <%= formatDate(event.starts_at) %>
-                </time>
-              </p>
-              <p class="event-card__price"><%= formatPrice(event.price_paise) %></p>
-              <p class="event-card__seats">
-                <%= seatsLeft(event) %> seat<%= seatsLeft(event) === 1 ? '' : 's' %> left
-              </p>
+              <div class="event-card__media">
+                <% if (bannerUrl(event.banner_key)) { %>
+                  <img
+                    class="event-card__banner"
+                    src="<%= bannerUrl(event.banner_key) %>"
+                    alt="<%= event.title %>"
+                    loading="lazy"
+                  >
+                <% } else { %>
+                  <div class="event-card__banner event-card__banner--placeholder" aria-hidden="true"></div>
+                <% } %>
+                <span class="event-card__price-chip"><%= formatPrice(event.price_paise) %></span>
+              </div>
+              <div class="event-card__body">
+                <p class="event-card__meta">
+                  <span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;margin-right:4px;">calendar_today</span>
+                  <time datetime="<%= new Date(event.starts_at).toISOString() %>">
+                    <%= formatDate(event.starts_at) %>
+                  </time>
+                </p>
+                <h3 class="event-card__title"><%= event.title %></h3>
+                <div class="event-card__footer">
+                  <p class="event-card__seats seats-left <%= seatsTone %>">
+                    <span class="seats-count <%= seatsCountClass %>"><%= left %></span>
+                    seat<%= left === 1 ? '' : 's' %> left
+                  </p>
+                  <span class="event-card__cta">Buy Now</span>
+                </div>
+              </div>
             </a>
           </article>
         </li>

@@ -18,11 +18,19 @@ const app = express();
 const port = Number(process.env.API_PORT) || 4000;
 
 const webOrigin = process.env.WEB_ORIGIN || 'http://localhost:3000';
+const adminOrigin = process.env.ADMIN_ORIGIN || 'http://localhost:5173';
+const allowedOrigins = [...new Set([webOrigin, adminOrigin, 'http://127.0.0.1:5173'])];
 
 app.use(
   cors({
-    origin: webOrigin,
-    methods: ['GET', 'POST', 'PATCH', 'OPTIONS'],
+    origin(origin, callback) {
+      // Allow non-browser tools (no Origin) and configured frontends
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error(`CORS blocked for origin: ${origin}`));
+    },
+    methods: ['GET', 'POST', 'PATCH', 'PUT', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );

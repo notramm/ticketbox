@@ -1,9 +1,9 @@
 <header class="site-header">
   <div class="site-header__inner">
-    <a class="site-logo" href="/">TicketBox</a>
+    <a class="site-logo" href="/" aria-label="TicketBox home">Ticket<span>Box</span></a>
     <nav class="site-nav" aria-label="Primary">
-      <a class="site-nav__link" href="/">Events</a>
-      <a class="site-nav__link" href="/bookings/lookup">My booking</a>
+      <a class="site-nav__link<%= typeof bodyClass !== 'undefined' && bodyClass === 'page--home' ? ' is-active' : '' %>" href="/">Home</a>
+      <a class="site-nav__link<%= typeof bodyClass !== 'undefined' && (bodyClass === 'page--lookup' || bodyClass === 'page--booking-lookup') ? ' is-active' : '' %>" href="/bookings/lookup">My Bookings</a>
     </nav>
   </div>
 </header>

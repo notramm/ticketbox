@@ -29,5 +29,6 @@ temp/
 *.pem
 *.key
 !*.key.example
+keys/
 
 .files
