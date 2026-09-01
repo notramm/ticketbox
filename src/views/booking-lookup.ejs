@@ -1,0 +1,25 @@
+<section class="booking-lookup">
+  <header class="booking-lookup__intro">
+    <h1 class="booking-lookup__title">Find my booking</h1>
+    <p class="booking-lookup__lede">Enter your ticket code and email.</p>
+  </header>
+
+  <!-- Day 4–5: wire to GET /bookings/:ticket_code -->
+  <form class="booking-lookup__form" method="get" action="/bookings/lookup">
+    <label class="field">
+      <span class="field__label">Ticket code</span>
+      <input class="field__input" type="text" name="ticket_code" required autocomplete="off">
+    </label>
+
+    <label class="field">
+      <span class="field__label">Email</span>
+      <input class="field__input" type="email" name="email" required autocomplete="email">
+    </label>
+
+    <button class="btn btn--primary" type="submit">Look up</button>
+  </form>
+
+  <% if (typeof message !== 'undefined' && message) { %>
+    <p class="booking-lookup__message"><%= message %></p>
+  <% } %>
+</section>

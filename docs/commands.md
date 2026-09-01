@@ -40,3 +40,14 @@ Invoke-RestMethod -Uri http://localhost:4000/auth/me -Headers @{ Authorization =
 # Expect 401 without token:
 try { Invoke-WebRequest -Uri http://localhost:4000/admin/events } catch { $_.Exception.Response.StatusCode }
 ```
+
+## Day 3
+
+```bash
+npm install ejs express-ejs-layouts
+npm run start:web
+
+# Browser
+# http://localhost:3000          → published events from DB
+# http://localhost:3000/events/intro-to-nodejs
+```

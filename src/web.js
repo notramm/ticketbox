@@ -2,15 +2,32 @@ require('dotenv').config();
 
 const express = require('express');
 const path = require('path');
+const expressLayouts = require('express-ejs-layouts');
 const logger = require('./config/logger');
 const db = require('./config/db');
+const { formatPrice, formatDate, seatsLeft } = require('./utils/format');
+const { errorHandler } = require('./middleware/errorHandler');
+
+const homeRoutes = require('./routes/web/home');
+const eventRoutes = require('./routes/web/event');
+const bookingRoutes = require('./routes/web/booking');
+const checkoutRoutes = require('./routes/web/checkout');
 
 const app = express();
 const port = Number(process.env.WEB_PORT) || 3000;
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+app.set('layout', 'layout');
+app.use(expressLayouts);
+
+app.locals.formatPrice = formatPrice;
+app.locals.formatDate = formatDate;
+app.locals.seatsLeft = seatsLeft;
+app.locals.s3PublicBaseUrl = process.env.S3_PUBLIC_BASE_URL || '';
+
 app.use(express.static(path.join(__dirname, '..', 'public')));
+app.use(express.urlencoded({ extended: false }));
 
 app.get('/health', async (_req, res) => {
   try {
@@ -22,34 +39,51 @@ app.get('/health', async (_req, res) => {
   }
 });
 
-// Day 1 stub — real EJS pages land on Day 3
-app.get('/', async (_req, res) => {
-  try {
-    const events = await db('events')
-      .where({ status: 'published' })
-      .whereNull('deleted_at')
-      .orderBy('starts_at', 'asc');
+app.use(homeRoutes);
+app.use(eventRoutes);
+app.use(bookingRoutes);
+app.use(checkoutRoutes);
 
-    res.type('html').send(`<!doctype html>
+function renderErrorPage(res, status, heading, message) {
+  res.status(status).send(`<!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"><title>TicketBox</title></head>
-<body>
-  <h1>TicketBox</h1>
-  <p>Day 1 scaffold — ${events.length} published event(s) in DB.</p>
-  <ul>
-    ${events
-      .map(
-        (e) =>
-          `<li><strong>${e.title}</strong> — ₹${(e.price_paise / 100).toFixed(0)} · ${e.total_seats - e.seats_sold} seats left</li>`
-      )
-      .join('')}
-  </ul>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>${heading} · TicketBox</title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body class="page page--error">
+  <main class="site-main">
+    <h1>${heading}</h1>
+    <p>${message}</p>
+    <p><a href="/">Back to events</a></p>
+  </main>
 </body>
 </html>`);
-  } catch (err) {
-    logger.error({ err }, 'home page failed');
-    res.status(500).send('Database error');
+}
+
+app.use((req, res, next) => {
+  if (req.accepts('html')) {
+    return renderErrorPage(res, 404, 'Page not found', 'That page does not exist.');
   }
+  return res.status(404).json({ error: 'Not found' });
+});
+
+app.use((err, req, res, next) => {
+  const status = err.status || err.statusCode || 500;
+  logger.error({ err }, 'web request failed');
+
+  if (req.accepts('html')) {
+    const heading = status === 404 ? 'Event not found' : 'Something went wrong';
+    const message =
+      status === 404
+        ? 'That event is missing or not published.'
+        : 'Please try again in a moment.';
+    return renderErrorPage(res, status, heading, message);
+  }
+
+  return errorHandler(err, req, res, next);
 });
 
 app.listen(port, () => {

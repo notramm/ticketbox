@@ -1,1 +1,228 @@
-﻿
+﻿/*
+  TicketBox public site — structural baseline for Sahil.
+  Swap / extend styles here; class names in the EJS templates are the contract.
+
+  Key hooks:
+  - .site-header / .site-logo / .site-nav
+  - .site-main / .site-footer
+  - .event-list / .event-card
+  - .event-detail / .booking-form
+  - .field / .btn
+*/
+
+:root {
+  --tb-bg: #f6f4ef;
+  --tb-ink: #1c1b19;
+  --tb-muted: #5c574f;
+  --tb-line: #d9d3c7;
+  --tb-accent: #0f6a56;
+  --tb-surface: #fffdf8;
+  --tb-max: 72rem;
+  --tb-space: 1.25rem;
+  --tb-font: "Segoe UI", Tahoma, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--tb-font);
+  color: var(--tb-ink);
+  background: var(--tb-bg);
+  line-height: 1.5;
+}
+
+a {
+  color: inherit;
+}
+
+.site-header,
+.site-footer,
+.site-main {
+  width: min(100% - 2rem, var(--tb-max));
+  margin-inline: auto;
+}
+
+.site-header {
+  padding: var(--tb-space) 0;
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--tb-line);
+  padding-bottom: 1rem;
+}
+
+.site-logo {
+  font-size: 1.35rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.site-nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.site-nav__link {
+  text-decoration: none;
+  color: var(--tb-muted);
+}
+
+.site-nav__link:hover {
+  color: var(--tb-ink);
+}
+
+.site-main {
+  padding: 1.5rem 0 3rem;
+}
+
+.site-footer {
+  padding: 2rem 0 3rem;
+  color: var(--tb-muted);
+  border-top: 1px solid var(--tb-line);
+}
+
+.home__title,
+.event-detail__title,
+.booking-lookup__title {
+  margin: 0 0 0.35rem;
+  font-size: clamp(1.75rem, 3vw, 2.4rem);
+  line-height: 1.15;
+}
+
+.home__lede,
+.booking-lookup__lede,
+.event-detail__meta {
+  margin: 0 0 1.5rem;
+  color: var(--tb-muted);
+}
+
+.event-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 720px) {
+  .event-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.event-card {
+  background: var(--tb-surface);
+  border: 1px solid var(--tb-line);
+  border-radius: 0.5rem;
+}
+
+.event-card__link {
+  display: block;
+  padding: 1.25rem;
+  text-decoration: none;
+}
+
+.event-card__title {
+  margin: 0 0 0.5rem;
+  font-size: 1.2rem;
+}
+
+.event-card__meta,
+.event-card__seats {
+  margin: 0.25rem 0;
+  color: var(--tb-muted);
+}
+
+.event-card__price {
+  margin: 0.75rem 0 0.25rem;
+  font-weight: 700;
+}
+
+.event-detail__back {
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: var(--tb-muted);
+  text-decoration: none;
+}
+
+.event-detail__facts {
+  display: flex;
+  gap: 2rem;
+  margin: 1.5rem 0;
+}
+
+.event-detail__fact dt {
+  color: var(--tb-muted);
+  font-size: 0.85rem;
+}
+
+.event-detail__fact dd {
+  margin: 0.2rem 0 0;
+  font-weight: 700;
+}
+
+.booking-form,
+.booking-lookup__form {
+  margin-top: 2rem;
+  padding: 1.25rem;
+  background: var(--tb-surface);
+  border: 1px solid var(--tb-line);
+  border-radius: 0.5rem;
+  max-width: 28rem;
+}
+
+.booking-form__title {
+  margin: 0 0 1rem;
+  font-size: 1.15rem;
+}
+
+.field {
+  display: block;
+  margin-bottom: 0.9rem;
+}
+
+.field__label {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-size: 0.9rem;
+  color: var(--tb-muted);
+}
+
+.field__input {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--tb-line);
+  border-radius: 0.35rem;
+  font: inherit;
+  background: #fff;
+}
+
+.btn {
+  display: inline-block;
+  border: 0;
+  border-radius: 0.35rem;
+  padding: 0.7rem 1rem;
+  font: inherit;
+  cursor: pointer;
+}
+
+.btn--primary {
+  background: var(--tb-accent);
+  color: #fff;
+}
+
+.home__empty,
+.booking-form__soldout,
+.booking-lookup__message {
+  color: var(--tb-muted);
+}

@@ -1,0 +1,31 @@
+<section class="home">
+  <header class="home__intro">
+    <h1 class="home__title">Upcoming events</h1>
+    <p class="home__lede">Pick a workshop or event and book your seat.</p>
+  </header>
+
+  <% if (!events.length) { %>
+    <p class="home__empty">No published events right now. Check back soon.</p>
+  <% } else { %>
+    <ul class="event-list">
+      <% events.forEach(function (event) { %>
+        <li class="event-list__item">
+          <article class="event-card">
+            <a class="event-card__link" href="/events/<%= event.slug %>">
+              <h2 class="event-card__title"><%= event.title %></h2>
+              <p class="event-card__meta">
+                <time datetime="<%= new Date(event.starts_at).toISOString() %>">
+                  <%= formatDate(event.starts_at) %>
+                </time>
+              </p>
+              <p class="event-card__price"><%= formatPrice(event.price_paise) %></p>
+              <p class="event-card__seats">
+                <%= seatsLeft(event) %> seat<%= seatsLeft(event) === 1 ? '' : 's' %> left
+              </p>
+            </a>
+          </article>
+        </li>
+      <% }) %>
+    </ul>
+  <% } %>
+</section>
