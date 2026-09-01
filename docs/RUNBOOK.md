@@ -45,9 +45,39 @@ sudo ufw status
 
 ---
 
+## Day 7 — PM2 + nginx on IP
+
+```bash
+pm2 status
+pm2 logs
+pm2 restart all
+sudo nginx -t && sudo systemctl reload nginx
+curl -sI http://127.0.0.1/ | head
+```
+
+---
+
+## Day 8 — Domain + Elastic IP
+
+```bash
+# DNS must show Elastic IP
+dig yourdomain.com +short
+dig api.yourdomain.com +short
+dig app.yourdomain.com +short
+
+export DOMAIN=yourdomain.com
+bash infra/scripts/07-enable-domain-nginx.sh
+pm2 restart all
+```
+
+If site works on IP but not domain: NS not delegated, or A record still on old dynamic IP (allocate Elastic IP).
+
+---
+
 ## Later (stubs)
 
-- Restart app: `pm2 restart all` (Day 7)
-- Logs: `pm2 logs` / `sudo journalctl -u nginx`
+- Restart app: `pm2 restart all`
+- Logs: `pm2 logs` / `sudo tail -f /var/log/nginx/error.log`
 - DB restore from S3 dump (Day 10)
 - Site down at 11PM: check auto-stop Lambda, Elastic IP, `pm2 status`, nginx
+- HTTPS: certbot (Day 9)

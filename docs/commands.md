@@ -136,3 +136,16 @@ pm2 save
 
 Full checklist: `docs/DAY7_EC2.md`  
 Sahil admin SPA on IP (optional/conflict): monorepo `deploy/day-7.md`
+
+## Day 8 (Domain + Route 53 + Elastic IP)
+
+```bash
+# After DNS A records point at Elastic IP:
+export DOMAIN=yourdomain.com
+bash infra/scripts/07-enable-domain-nginx.sh
+bash infra/scripts/08-print-domain-env.sh
+# Update .env origins → pm2 restart all
+# dig yourdomain.com +short
+```
+
+Full checklist: `docs/DAY8_EC2.md`
