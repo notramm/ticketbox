@@ -148,7 +148,8 @@ bash infra/scripts/08-print-domain-env.sh
 # dig yourdomain.com +short
 ```
 
-Full checklist: `docs/DAY8_EC2.md`
+Full checklist: `docs/DAY8_EC2.md`  
+Sahil side: monorepo `deploy/day-8.md`, `deploy/dns-checklist.md`
 
 ## Day 9 (HTTPS + live webhook + payment)
 
@@ -163,3 +164,38 @@ bash infra/scripts/10-print-https-env.sh
 ```
 
 Full checklist: `docs/DAY9_EC2.md`
+
+## Day 10 (auto-stop, backups, wrap-up docs)
+
+```bash
+# On EC2 — one backup now
+set -a && source .env && set +a
+export BACKUP_S3_URI=s3://YOUR_BACKUP_BUCKET/ticketbox/db/
+bash infra/scripts/11-pg-dump-backup.sh
+
+# Lambda: zip + upload Backend/infra/lambda/ec2-schedule/handler.py
+# EventBridge: stop + start with {"action":"stop"|"start"}
+# Fill COST_REPORT.md / BUDGET_PROOF.md with screenshots (do not commit secrets)
+```
+
+Full checklist: `docs/DAY10_EC2.md`  
+Also: `docs/FTP_VS_RSYNC.md`, `docs/ARCHITECTURE.md`, `docs/TEARDOWN.md`
+Sahil side: monorepo `deploy/day-9.md`, `deploy/https-checklist.md`
+
+## Day 10 (auto-stop, backups, wrap-up)
+
+```bash
+# Lambda: see infra/lambda/ec2-schedule/README.md
+
+# DB dump (on EC2)
+cd ~/ticketbox/Backend
+set -a && source .env && set +a
+export BACKUP_S3_URI=s3://YOUR_BACKUP_BUCKET/ticketbox/db/
+bash infra/scripts/11-pg-dump-backup.sh
+
+# Optional restore drill
+# bash infra/scripts/12-restore-from-dump.sh /var/backups/ticketbox/ticketbox-YYYY-MM-DD.dump
+```
+
+Docs: `docs/DAY10_EC2.md`, `ARCHITECTURE.md`, `COST_REPORT.md`, `BUDGET_PROOF.md`, `TEARDOWN.md`  
+Sahil: monorepo `deploy/day-10.md`, `deploy/wrapup-checklist.md`
