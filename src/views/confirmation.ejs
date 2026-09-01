@@ -1,0 +1,43 @@
+<section class="confirmation">
+  <header class="confirmation__intro">
+    <h1 class="confirmation__title">Booking confirmed</h1>
+    <p class="confirmation__lede">Your ticket is ready. Keep this code safe.</p>
+  </header>
+
+  <div class="confirmation__ticket">
+    <p class="confirmation__code-label">Ticket code</p>
+    <p class="confirmation__code"><%= booking.ticket_code %></p>
+
+    <h2 class="confirmation__event"><%= booking.title %></h2>
+    <p class="confirmation__meta">
+      <time datetime="<%= new Date(booking.starts_at).toISOString() %>">
+        <%= formatDate(booking.starts_at) %>
+      </time>
+    </p>
+
+    <dl class="confirmation__facts">
+      <div>
+        <dt>Name</dt>
+        <dd><%= booking.customer_name %></dd>
+      </div>
+      <div>
+        <dt>Email</dt>
+        <dd><%= booking.email %></dd>
+      </div>
+      <div>
+        <dt>Quantity</dt>
+        <dd><%= booking.qty %></dd>
+      </div>
+      <div>
+        <dt>Paid</dt>
+        <dd><%= formatPrice(booking.amount_paise) %></dd>
+      </div>
+      <div>
+        <dt>Status</dt>
+        <dd><%= booking.status %></dd>
+      </div>
+    </dl>
+  </div>
+
+  <p><a href="/">Browse more events</a></p>
+</section>

@@ -226,3 +226,62 @@ a {
 .booking-lookup__message {
   color: var(--tb-muted);
 }
+
+.checkout__summary,
+.confirmation__ticket,
+.booking-lookup__result {
+  background: var(--tb-surface);
+  border: 1px solid var(--tb-line);
+  border-radius: 0.5rem;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  max-width: 28rem;
+}
+
+.checkout__form {
+  max-width: 28rem;
+}
+
+.checkout__error {
+  color: #8b1e1e;
+  margin: 0 0 1rem;
+}
+
+.checkout__facts,
+.confirmation__facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem 1.5rem;
+  margin: 1rem 0 0;
+}
+
+.checkout__facts dt,
+.confirmation__facts dt {
+  color: var(--tb-muted);
+  font-size: 0.85rem;
+}
+
+.checkout__facts dd,
+.confirmation__facts dd {
+  margin: 0.15rem 0 0;
+  font-weight: 700;
+}
+
+.confirmation__code,
+.booking-lookup__result .confirmation__code {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin: 0.25rem 0 1rem;
+}
+
+.confirmation__code-label {
+  margin: 0;
+  color: var(--tb-muted);
+  font-size: 0.85rem;
+}
+
+.btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}

@@ -4,11 +4,10 @@
     <p class="booking-lookup__lede">Enter your ticket code and email.</p>
   </header>
 
-  <!-- Day 4–5: wire to GET /bookings/:ticket_code -->
-  <form class="booking-lookup__form" method="get" action="/bookings/lookup">
+  <form class="booking-lookup__form" method="post" action="/bookings/lookup">
     <label class="field">
       <span class="field__label">Ticket code</span>
-      <input class="field__input" type="text" name="ticket_code" required autocomplete="off">
+      <input class="field__input" type="text" name="ticket_code" required autocomplete="off" placeholder="TB-XXXXXXXX">
     </label>
 
     <label class="field">
@@ -19,7 +18,17 @@
     <button class="btn btn--primary" type="submit">Look up</button>
   </form>
 
-  <% if (typeof message !== 'undefined' && message) { %>
+  <% if (message) { %>
     <p class="booking-lookup__message"><%= message %></p>
+  <% } %>
+
+  <% if (booking) { %>
+    <div class="booking-lookup__result">
+      <p class="confirmation__code"><%= booking.ticket_code %></p>
+      <h2><%= booking.title %></h2>
+      <p><%= formatDate(booking.starts_at) %></p>
+      <p><%= booking.qty %> ticket(s) · <%= formatPrice(booking.amount_paise) %> · <%= booking.status %></p>
+      <p><a href="/bookings/<%= booking.ticket_code %>">Open confirmation page</a></p>
+    </div>
   <% } %>
 </section>

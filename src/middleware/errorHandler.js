@@ -11,7 +11,7 @@ function errorHandler(err, _req, res, _next) {
   if (status >= 500) {
     logger.error({ err }, 'unhandled error');
   } else {
-    logger.warn({ err: { message, status, details: err.details } }, 'request error');
+    logger.warn({ message, status, details: err.details }, 'request error');
   }
 
   const body = { error: message };
